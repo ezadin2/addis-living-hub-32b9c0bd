@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Bath, BedDouble, Calendar, Check, Flag, Heart, MapPin, Ruler, ShieldCheck, Star } from "lucide-react";
+import { Bath, BedDouble, Calendar, Check, Flag, Fuel, Gauge, Heart, MapPin, Ruler, Settings2, ShieldCheck, Star, UserCog, Users, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { VerificationBadge } from "@/components/site/VerificationBadge";
@@ -53,6 +53,22 @@ function Detail() {
     const fb = fallbackImage(l.kind, i);
     if (e.currentTarget.src !== new URL(fb, window.location.href).href) e.currentTarget.src = fb;
   };
+  const specs: { icon: typeof Bath; text: string }[] = [];
+  if (l.kind === "property") {
+    if (l.bedrooms > 0) specs.push({ icon: BedDouble, text: `${l.bedrooms} bedroom${l.bedrooms > 1 ? "s" : ""}` });
+    if (l.bathrooms > 0) specs.push({ icon: Bath, text: `${l.bathrooms} bathroom${l.bathrooms > 1 ? "s" : ""}` });
+    if (l.size_sqm) specs.push({ icon: Ruler, text: `${l.size_sqm} m²` });
+  } else if (l.kind === "vehicle") {
+    if (l.year) specs.push({ icon: Calendar, text: String(l.year) });
+    if (l.transmission) specs.push({ icon: Settings2, text: l.transmission.charAt(0).toUpperCase() + l.transmission.slice(1) });
+    if (l.seats) specs.push({ icon: Users, text: `${l.seats} seats` });
+    if (l.fuel) specs.push({ icon: Fuel, text: l.fuel.charAt(0).toUpperCase() + l.fuel.slice(1) });
+  } else if (l.kind === "equipment") {
+    if (l.make) specs.push({ icon: Wrench, text: `${l.make}${l.model ? ` ${l.model}` : ""}` });
+    if (l.condition) specs.push({ icon: Gauge, text: l.condition.charAt(0).toUpperCase() + l.condition.slice(1) });
+    if (l.with_operator) specs.push({ icon: UserCog, text: "Operator included" });
+  }
+  const aboutLabel = `About this ${l.kind === "property" ? "property" : l.kind}`;
   return (
     <PageShell>
       <div className="container-page py-8">
@@ -73,23 +89,26 @@ function Detail() {
             {l.premium && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold uppercase text-accent">Featured</span>}
             <h1 className="mt-3 text-3xl font-bold">{l.title}</h1>
             <p className="mt-2 flex items-center gap-1 text-muted-foreground"><MapPin className="h-4 w-4" />{l.neighborhood}, {l.city}</p>
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                [BedDouble, `${l.bedrooms} bedrooms`], [Bath, `${l.bathrooms} bathrooms`],
-                [Ruler, l.size_sqm ? `${l.size_sqm} m²` : "Size n/a"], [Calendar, `Min ${l.min_term} month${l.min_term > 1 ? "s" : ""}`],
-              ].map(([I, t]) => { const Icon = I as typeof Bath; return (
-                <div key={t as string} className="rounded-lg border border-border bg-card p-3 text-sm"><Icon className="h-4 w-4 text-accent" /><p className="mt-2 font-medium">{t as string}</p></div>
-              ); })}
-            </div>
-            <h2 className="mt-10 text-xl font-bold">About this property</h2>
+            {specs.length > 0 && (
+              <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {specs.map(({ icon: Icon, text }) => (
+                  <div key={text} className="rounded-lg border border-border bg-card p-3 text-sm"><Icon className="h-4 w-4 text-accent" /><p className="mt-2 font-medium">{text}</p></div>
+                ))}
+              </div>
+            )}
+            <h2 className="mt-10 text-xl font-bold">{aboutLabel}</h2>
             <p className="mt-3 text-muted-foreground">{l.description}</p>
-            <h2 className="mt-10 text-xl font-bold">Amenities</h2>
-            <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {l.amenities.map((a) => <li key={a} className="flex items-center gap-2 text-sm"><Check className="h-4 w-4 text-accent" />{a}</li>)}
-            </ul>
+            {l.amenities.length > 0 && (
+              <>
+                <h2 className="mt-10 text-xl font-bold">Amenities</h2>
+                <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {l.amenities.map((a) => <li key={a} className="flex items-center gap-2 text-sm"><Check className="h-4 w-4 text-accent" />{a}</li>)}
+                </ul>
+              </>
+            )}
             <h2 className="mt-10 text-xl font-bold">Rental terms</h2>
             <dl className="mt-3 divide-y divide-border rounded-xl border border-border bg-card text-sm">
-              {[[l.price_unit === "day" ? "Daily price" : "Monthly rent", formatETB(l.price)], ["Deposit", l.deposit ?? "Ask owner"], ["Furnishing", l.furnishing ?? "—"], ["Minimum duration", `${l.min_term} ${unitLabel(l.price_unit)}${l.min_term > 1 ? "s" : ""}`], ["Listed", new Date(l.created_at).toLocaleDateString()]].map(([k, v]) => (
+              {[[l.price_unit === "day" ? "Daily price" : "Monthly rent", formatETB(l.price)], ["Deposit", l.deposit ?? "Ask owner"], ...(l.kind === "property" ? [["Furnishing", l.furnishing ?? "—"]] : []), ["Minimum duration", `${l.min_term} ${unitLabel(l.price_unit)}${l.min_term > 1 ? "s" : ""}`], ["Listed", new Date(l.created_at).toLocaleDateString()]].map(([k, v]) => (
                 <div key={k} className="flex justify-between p-3"><dt className="text-muted-foreground">{k}</dt><dd className="font-medium capitalize">{v}</dd></div>
               ))}
             </dl>

@@ -44,6 +44,8 @@ function AuthButtons({ onDone }: { onDone?: () => void }) {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { role } = useAuth();
+  const canList = !role || role === "owner";
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between gap-4">
@@ -63,7 +65,7 @@ export function SiteHeader() {
         </nav>
         <div className="hidden lg:flex items-center gap-2">
           <AuthButtons />
-          <Button asChild variant="accent" size="sm"><Link to="/list-property">List an item</Link></Button>
+          {canList && <Button asChild variant="accent" size="sm"><Link to="/list-property">List an item</Link></Button>}
         </div>
         <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Toggle menu" aria-expanded={open}>
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -79,7 +81,7 @@ export function SiteHeader() {
             ))}
             <div className="mt-3 grid grid-cols-2 gap-2">
               <AuthButtons onDone={() => setOpen(false)} />
-              <Button asChild variant="accent" className="col-span-2"><Link to="/list-property" onClick={() => setOpen(false)}>List an item</Link></Button>
+              {canList && <Button asChild variant="accent" className="col-span-2"><Link to="/list-property" onClick={() => setOpen(false)}>List an item</Link></Button>}
             </div>
           </nav>
         </div>

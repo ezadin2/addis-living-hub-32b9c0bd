@@ -1,9 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { PageShell, PageHeading } from "@/components/site/PageShell";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 import { AMENITIES, CATEGORIES, NEIGHBORHOODS } from "@/lib/listings";
 
 export const Route = createFileRoute("/list-property")({
@@ -23,7 +24,30 @@ export const Route = createFileRoute("/list-property")({
 const STEPS = ["Basics", "Details", "Photos", "Terms"];
 const f = "mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm";
 
+/** Only owners publish listings: owners go to their real listing form, others get a clear message. */
 function Page() {
+  const { loading, session, role } = useAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && role === "owner") void navigate({ to: "/owner", search: { tab: "new" }, replace: true });
+  }, [loading, role, navigate]);
+  if (loading || role === "owner") return <PageShell><p className="container-page py-24 text-center text-sm text-muted-foreground">Loading…</p></PageShell>;
+  return (
+    <PageShell>
+      <div className="container-page max-w-lg py-24 text-center">
+        <h1 className="text-2xl font-bold">{!session ? "Sign in as an owner to list" : role === "admin" ? "Admins moderate listings" : "Listing is for owner accounts"}</h1>
+        <p className="mt-2 text-muted-foreground">{!session ? "Create an owner account or sign in to publish rentals." : role === "admin" ? "Review, approve and manage every listing from the admin console." : "Renter accounts can browse, save and request rentals. Only owner accounts can publish listings."}</p>
+        <div className="mt-6 flex justify-center gap-2">
+          {!session ? <><Button asChild variant="accent"><Link to="/signin" search={{ mode: "signup" }}>Create account</Link></Button><Button asChild variant="outline"><Link to="/signin">Sign in</Link></Button></>
+            : role === "admin" ? <Button asChild variant="accent"><Link to="/admin" search={{ tab: "listings" }}>Manage listings</Link></Button>
+            : <Button asChild variant="accent"><Link to="/rentals">Browse rentals</Link></Button>}
+        </div>
+      </div>
+    </PageShell>
+  );
+}
+
+function LegacyDemoForm() {
   const [step, setStep] = useState(0);
   const [photos, setPhotos] = useState<string[]>([]);
   const [done, setDone] = useState(false);

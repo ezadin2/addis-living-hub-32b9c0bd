@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { publicListingsQuery } from "@/lib/queries";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LayoutGrid, List, SlidersHorizontal, X, SearchX } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { ListingCard } from "@/components/site/ListingCard";
@@ -57,6 +57,9 @@ function RentalsPage() {
   const [shown, setShown] = useState(PAGE);
   const { data: allListings = [] } = useQuery(publicListingsQuery);
   const results = useMemo(() => filterListings(allListings, f), [allListings, f]);
+  // Reset paging whenever filters change (e.g. arriving from a "View all" link).
+  const fKey = JSON.stringify(f);
+  useEffect(() => setShown(PAGE), [fKey]);
   const set = (patch: Partial<Filters>) => {
     setShown(PAGE);
     navigate({ search: (prev) => ({ ...prev, ...patch }), replace: true });

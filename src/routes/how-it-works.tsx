@@ -16,13 +16,13 @@ export const Route = createFileRoute("/how-it-works")({
   component: Page,
 });
 
-const RENTER = ["Search by neighborhood, price in ETB and bedrooms.", "Save favorites and compare terms side by side.", "Check the owner's verification status.", "Request a viewing — never pay before you see it.", "Review and accept a digital rental agreement."];
-const OWNER = ["Create an account and verify your identity.", "Add photos, rent, deposit and minimum duration.", "Your listing is reviewed before it goes live.", "Respond to inquiries and schedule viewings.", "Generate an agreement with your chosen renter."];
+const RENTER = ["Search by area, price and type.", "Save and compare favorites.", "Check the owner's verification.", "View before you pay.", "Sign the digital agreement."];
+const OWNER = ["Create an owner account and verify.", "Add photos, price and terms.", "We review it before it goes live.", "Answer requests and viewings.", "Send the agreement to your renter."];
 
 function Page() {
   return (
     <PageShell>
-      <PageHeading eyebrow="How it works" title="Simple steps, built on trust" />
+      <PageHeading eyebrow="How it works" title="Rent in five simple steps" />
       <div className="container-page mt-10 grid gap-8 md:grid-cols-2">
         {[["For renters", RENTER, "/rentals", "Find a rental"], ["For owners & agents", OWNER, "/list-property", "List a property"]].map(([t, steps, to, cta]) => (
           <section key={t as string} className="rounded-xl border border-border bg-card p-6 shadow-card">

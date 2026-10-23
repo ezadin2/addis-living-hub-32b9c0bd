@@ -20,7 +20,7 @@ export const Route = createFileRoute("/safety")({
 function Page() {
   return (
     <PageShell>
-      <PageHeading eyebrow="Safety" title="Verification, explained honestly" intro="Badges tell you what has been checked — and just as importantly, what hasn't." />
+      <PageHeading eyebrow="Safety" title="What our badges mean" intro="Know what's been checked — and what hasn't." />
       <div className="container-page mt-10 grid gap-10 lg:grid-cols-2">
         <section>
           <h2 className="text-xl font-bold">What each badge means</h2>

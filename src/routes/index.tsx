@@ -71,9 +71,9 @@ function Index() {
         <SectionHead title="How it works" link={{ to: "/how-it-works", label: "Learn more" }} />
         <ol className="mt-8 grid gap-8 md:grid-cols-3">
           {[
-            ["Discover or list", "Search verified listings across Ethiopia, or publish your own property in minutes."],
-            ["Verify your identity", "Confirm who you are through Fayda once the authorized integration is live."],
-            ["Agree transparently", "Contact the other party, review terms and complete a digital rental agreement."],
+            ["Search", "Find homes, vehicles and equipment near you."],
+            ["Verify", "Check who you're dealing with."],
+            ["Rent", "Request, agree and sign digitally."],
           ].map(([t, d], i) => {
             return (
               <li key={t as string} className="border-t-2 border-primary pt-5">
@@ -123,11 +123,11 @@ function Index() {
       <section className="container-page mt-20">
         <div className="grid items-center gap-8 rounded-2xl bg-primary p-8 text-primary-foreground sm:p-12 md:grid-cols-[1.5fr_1fr]">
           <div>
-            <h2 className="text-2xl font-bold sm:text-3xl">Own a property? Reach serious renters.</h2>
-            <p className="mt-3 max-w-xl text-primary-foreground/75">List for free, show your verification status, and manage inquiries and viewing requests in one place.</p>
+            <h2 className="text-2xl font-bold sm:text-3xl">Have something to rent out?</h2>
+            <p className="mt-3 max-w-xl text-primary-foreground/75">List for free and manage every request in one place.</p>
           </div>
           <div className="flex gap-3 md:justify-end">
-            <Button asChild variant="accent" size="lg"><Link to="/list-property">List your property</Link></Button>
+            <Button asChild variant="accent" size="lg"><Link to="/list-property">Start listing</Link></Button>
           </div>
         </div>
       </section>
@@ -182,7 +182,7 @@ function Hero() {
           <p className="text-xs font-semibold uppercase tracking-widest text-primary-foreground/70">Trust-first renting in Ethiopia</p>
           <h1 className="mt-4 text-4xl font-bold leading-[1.1] sm:text-5xl lg:text-6xl">Find your next rental.</h1>
           <p className="mt-5 max-w-xl text-base text-primary-foreground/80 sm:text-lg">
-            Houses, rooms, vehicles and equipment across Ethiopia — from owners with verified identities and clear, upfront terms.
+            Homes, vehicles and equipment from verified owners — with clear terms.
           </p>
         </div>
         <form
@@ -240,7 +240,7 @@ function Hero() {
           <Button type="submit" variant="accent" size="lg" className="col-span-2 h-11 self-end lg:col-span-1"><Search /> Search</Button>
         </form>
         <p className="mt-4 max-w-2xl text-xs text-primary-foreground/60">
-          Fayda identity verification will be offered through an authorized integration. FaydaRent is not endorsed by the National ID Program.
+          FaydaRent is not endorsed by the National ID Program.
         </p>
       </div>
     </section>
@@ -249,21 +249,19 @@ function Hero() {
 
 function TrustSection() {
   const items = [
-    ["Identity verification", "Owners and renters can confirm identity through an authorized Fayda integration."],
-    ["Clear verification status", "Every profile and listing shows exactly what has — and hasn't — been checked."],
-    ["Transparent terms", "Rent, deposit, fees and minimum duration are shown up front."],
-    ["Digital agreements", "Generate a written agreement both parties review and accept."],
-    ["Privacy by design", "We never show ID numbers or sensitive identity data publicly."],
-    ["Traceability", "Inquiries and agreements are recorded to help resolve disputes."],
+    ["Verified identities", "See exactly what's been checked."],
+    ["Upfront pricing", "Rent, deposit and fees shown before you commit."],
+    ["Digital agreements", "Signed, QR-verifiable contracts."],
+    ["Private by default", "ID numbers are never shown publicly."],
   ] as const;
   return (
     <section className="mt-20 bg-card border-y border-border">
       <div className="container-page py-16 grid gap-10 lg:grid-cols-[1fr_2fr]">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-accent">Trust & safety</p>
-          <h2 className="mt-2 text-3xl font-bold">Built to reduce rental fraud</h2>
-          <p className="mt-4 text-muted-foreground">Identity verification confirms who someone is. It does not prove that they own a property or that a listing is genuine — always view in person before paying.</p>
-          <Button asChild variant="outline" className="mt-6"><Link to="/safety">Read our safety guide</Link></Button>
+          <h2 className="mt-2 text-3xl font-bold">Rent with confidence</h2>
+          <p className="mt-4 text-muted-foreground">Verification confirms identity, not ownership. Always view before you pay.</p>
+          <Button asChild variant="outline" className="mt-6"><Link to="/safety">Safety guide</Link></Button>
         </div>
         <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
           {items.map(([t, d]) => (
